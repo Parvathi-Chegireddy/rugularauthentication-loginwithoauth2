@@ -12,11 +12,6 @@ import java.util.Map;
 @RequestMapping("/api")
 public class DashboardController {
 
-    /**
-     * GET /api/admin/dashboard
-     * Only ROLE_ADMIN can access. Spring Security returns 403 automatically
-     * for any other role — no manual role check needed.
-     */
     @GetMapping("/admin/dashboard")
     @PreAuthorize("hasRole('ADMIN')")
     public Map<String, Object> adminDashboard(Principal principal) {
@@ -27,10 +22,6 @@ public class DashboardController {
         );
     }
 
-    /**
-     * GET /api/user/dashboard
-     * Both ROLE_USER and ROLE_ADMIN can access.
-     */
     @GetMapping("/user/dashboard")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public Map<String, Object> userDashboard(Principal principal) {
