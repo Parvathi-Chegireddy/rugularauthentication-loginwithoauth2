@@ -13,11 +13,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * Reads X-Auth-Username and X-Auth-Role headers injected by the gateway
- * and populates Spring Security's SecurityContext.
- * Enables @PreAuthorize on DashboardController endpoints.
- */
 @Component
 public class GatewayAuthFilter extends OncePerRequestFilter {
 
