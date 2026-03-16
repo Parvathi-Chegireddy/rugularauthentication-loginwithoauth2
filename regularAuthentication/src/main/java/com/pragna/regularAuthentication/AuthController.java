@@ -30,8 +30,7 @@ public class AuthController {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
     }
-
-    /* ── Register ────────────────────────────────────────── */
+    
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> register(
             @RequestBody RegisterRequest req) {
@@ -59,8 +58,7 @@ public class AuthController {
         res.put("role",     req.getRole());
         return ResponseEntity.status(HttpStatus.CREATED).body(res);
     }
-
-    /* ── Login ───────────────────────────────────────────── */
+    
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(
             @RequestBody LoginRequest req,
@@ -76,7 +74,6 @@ public class AuthController {
             String role     = isAdmin ? "ROLE_ADMIN" : "ROLE_USER";
             String username = auth.getName();
 
-            // Fetch user for email/displayName
             User user = userService.findByUsername(username);
             String email       = user != null && user.getEmail() != null
                                  ? user.getEmail() : "";
@@ -96,12 +93,6 @@ public class AuthController {
         }
     }
 
-    /* ── OAuth2 user persistence ─────────────────────────── */
-    /**
-     * POST /api/auth/oauth2/save-user
-     * Called by OAuth2SuccessHandler to persist OAuth2 users to DB.
-     * Internal endpoint — not exposed via gateway.
-     */
     @PostMapping("/oauth2/save-user")
     public ResponseEntity<Map<String, Object>> saveOAuthUser(
             @RequestBody Map<String, String> req) {
@@ -124,7 +115,6 @@ public class AuthController {
         }
     }
 
-    /* ── Logout ──────────────────────────────────────────── */
     @PostMapping("/logout")
     public ResponseEntity<Map<String, String>> logout(HttpServletResponse response) {
         try {
@@ -140,7 +130,6 @@ public class AuthController {
         return ResponseEntity.ok(Map.of("message", "Logged out successfully"));
     }
 
-    /* ── Profile service call ────────────────────────────── */
     @SuppressWarnings("unchecked")
     private Map<String, Object> callProfileService(
             String username, String displayName, String email,
