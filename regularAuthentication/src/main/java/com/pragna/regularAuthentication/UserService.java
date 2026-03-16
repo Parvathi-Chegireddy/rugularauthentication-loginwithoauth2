@@ -42,7 +42,6 @@ public class UserService {
     public User saveOAuthUser(String provider, String providerId,
                               String name, String email, String avatarUrl) {
 
-        // Check if user already exists with this provider account
         Optional<User> existing =
                 userRepository.findByProviderAndProviderId(provider, providerId);
 
