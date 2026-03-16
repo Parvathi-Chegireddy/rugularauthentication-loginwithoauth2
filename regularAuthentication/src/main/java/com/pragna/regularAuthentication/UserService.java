@@ -24,9 +24,6 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    /**
-     * Register a new regular (username/password) user.
-     */
     public User registerUser(User user, String roleName) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setProvider(null); // local user
@@ -42,12 +39,6 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    /**
-     * Save or update an OAuth2 user.
-     * Called by OAuth2SuccessHandler after successful provider login.
-     * If user already exists (same provider + providerId), updates their info.
-     * If new, creates an account with a random unusable password.
-     */
     public User saveOAuthUser(String provider, String providerId,
                               String name, String email, String avatarUrl) {
 
@@ -56,7 +47,6 @@ public class UserService {
                 userRepository.findByProviderAndProviderId(provider, providerId);
 
         if (existing.isPresent()) {
-            // Update their latest info from provider
             User user = existing.get();
             user.setDisplayName(name);
             user.setEmail(email);
@@ -64,14 +54,11 @@ public class UserService {
             return userRepository.save(user);
         }
 
-        // New OAuth2 user — create account
         User user = new User();
 
-        // Generate a unique username: "google_raju" or "github_bhupesh" etc
         String baseUsername = provider + "_" + sanitize(name);
         user.setUsername(uniqueUsername(baseUsername));
 
-        // Random unusable password — OAuth2 users never use password login
         user.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
 
         user.setEmail(email);
@@ -81,7 +68,6 @@ public class UserService {
         user.setProviderId(providerId);
         user.setEnabled(true);
 
-        // Default role
         Role role = roleRepository.findByName("ROLE_USER");
         if (role == null)
             throw new RuntimeException("ROLE_USER not found — run DataInitializer first");
@@ -97,8 +83,6 @@ public class UserService {
     public List<Role> getAllRoles() {
         return roleRepository.findAll();
     }
-
-    /* ── helpers ─────────────────────────────────────────── */
 
     private String sanitize(String name) {
         if (name == null) return "user";
