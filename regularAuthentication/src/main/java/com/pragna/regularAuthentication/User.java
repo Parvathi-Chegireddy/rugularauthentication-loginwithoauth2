@@ -23,12 +23,11 @@ public class User {
 
     private boolean enabled = true;
 
-    // OAuth2 fields — null for regular username/password users
     @Column(name = "provider")
-    private String provider;          // "google", "github", null = local
+    private String provider;         
 
     @Column(name = "provider_id")
-    private String providerId;        // OAuth2 sub/id from provider
+    private String providerId;      
 
     @Column(name = "display_name")
     private String displayName;
@@ -44,7 +43,6 @@ public class User {
     )
     private Set<Role> roles = new HashSet<>();
 
-    // Getters & Setters
     public Long getId()              { return id; }
     public void setId(Long id)       { this.id = id; }
 
